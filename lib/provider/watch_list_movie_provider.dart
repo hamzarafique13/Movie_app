@@ -46,7 +46,7 @@ class WatchListNotifier extends ChangeNotifier {
     DbMovieModel? movie = _watchlist.firstWhereOrNull(
       (element) => element.id == id,
     );
-    notifyListeners();
+    //notifyListeners();
     if (movie == null) {
       return false;
     } else {

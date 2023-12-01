@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movie_app_use_riverpod/model/dbmoviemodel.dart';
 import 'package:movie_app_use_riverpod/model/moviesmodel.dart';
 import 'package:movie_app_use_riverpod/pages/detail_page/detail_page.dart';
 import 'package:movie_app_use_riverpod/pages/home_page/home_page_responsive.dart';
 import 'package:movie_app_use_riverpod/pages/search_page/search_page.dart';
+import 'package:movie_app_use_riverpod/provider/theme_provider.dart';
 import 'package:movie_app_use_riverpod/provider/watch_list_movie_provider.dart';
 import 'package:movie_app_use_riverpod/provider/treading_movie_provider.dart';
 import 'package:movie_app_use_riverpod/provider/popular_movie_provider.dart';
@@ -44,6 +46,7 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
     List<MovieModel> popularlist = ref.watch(popularlistmoviePageProvider);
     List<DbMovieModel> watchlist =
         ref.watch(watchListmoviePageProvider).watchlist;
+          final themeValue = ref.watch(themeModeProvider);
 
     final TabController _tabController = TabController(length: 4, vsync: this);
     return Scaffold(
@@ -59,17 +62,49 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
                         automaticallyImplyLeading: false,
                         title: Padding(
                           padding: const EdgeInsets.only(left: 24),
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 40),
-                            alignment: Alignment.topLeft,
-                            child: const Text(
-                              'What do you want to watch?',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xffFFFFFF)),
-                            ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 40),
+                                alignment: Alignment.topLeft,
+                                child: const Text(
+                                  'What do you want to watch?',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xffFFFFFF)),
+                                ),
+                              ),
+                                const SizedBox(width: 20,),
+                Container(
+                  margin: const EdgeInsets.only(top: 35),
+                  alignment: Alignment.topRight,
+                  child: FlutterSwitch(
+                    
+                    height: 20.0,
+                    width: 40.0,
+                    padding: 4.0,
+                    toggleSize: 15.0,
+                    borderRadius: 10.0,
+                    activeColor: const Color.fromRGBO(33, 150, 243, 1),
+                    
+                
+                       value: themeValue == ThemeMode.dark ? true : false,
+          onToggle: (value) {
+            // final sharedPrefs = ref.read(sharedPrefsProvider);
+            if (value) {
+              // sharedPrefs.setBool(isDarkModeActive, true);
+              ref.read(themeModeProvider.notifier).state = ThemeMode.dark;
+            } else {
+              // sharedPrefs.setBool(SharedPrefsString.isDarkModeActive, false);
+              ref.read(themeModeProvider.notifier).state = ThemeMode.light;
+            }
+          },
+                    
+                  ),
+                ),
+                            ],
                           ),
                         ),
                       ),
